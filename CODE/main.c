@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 #define WYJSCIE 9
-struct student *root; //pierwszy element
+struct student *root=0; //pierwszy element
+struct student *wskaznik;
 /*
     na start programu tworzony jest pierwszy obiekt.
 
@@ -26,13 +27,8 @@ struct student{
 void add_students(int ilosc, struct student *ws_listy){ // ile i do ktorej listy
     struct student *current_student, *new_student;
     int i=0;
-    if(!ws_listy){ //jesli nie ma jeszcze listy
+    if(!ws_listy){ //jeśli nie ma jeszcze listy
         ws_listy=malloc(sizeof(struct student));
-        printf("przed zmiana\n");
-        *root=ws_listy; // przypisanie roota do pierwszego elemtnu
-        printf("po zmianie\n");
-        fflush(stdout);
-
         wpisz_dane_studenta(ws_listy);
         ws_listy->next_adress=0;
         i++; // bo juz jednego utworzylismy
@@ -47,12 +43,17 @@ void add_students(int ilosc, struct student *ws_listy){ // ile i do ktorej listy
 
         current_student->next_adress=malloc(sizeof(struct student)); // (1) w aktualneej strokturze wpisujemy adres do kolejnego
 
-        current_student=current_student->next_adress; // (2) //current zaczyna wskazywaæ na nowo utworzony
+        current_student=current_student->next_adress; // (2) //current zaczyna wskazywać na nowo utworzony
 
         if(current_student==NULL){printf("\n=========================\n      blad pamieci\n=========================\n"); return 0;}
 
         wpisz_dane_studenta(current_student); // (3) wpisujemy dane studenta
     }
+    wyswietl_all(ws_listy);
+    wskaznik = ws_listy;
+    printf("po pierwszym\n");
+    wyswietl_all(wskaznik);
+    // w ws_listy jest wskaźnik którego chce zapisac do zmiennej globalnej
 }
 
 void wpisz_dane_studenta(struct student *s){ // przekazujemy wskaŸnik na konkretny element
@@ -70,7 +71,7 @@ void wyswietl( struct student s){ // wypisuje konkretny obiekt strukturalny
 void wyswietl_all(struct student *lista_studentow){
     system("cls");
     if(!lista_studentow){
-            printf("Nie ma zadnego studenta na liscie dodaj wybierajac z menu 1\n");
+            printf("Nie ma zadnego studenta na liscie dodaj wybierajac z menu 0\n");
             return 0; // nie ma elementow
     }
     else{
