@@ -2,8 +2,7 @@
 #include <stdlib.h>
 
 #define WYJSCIE 9
-struct student *root=0; //pierwszy element
-struct student *wskaznik;
+
 /*
     na start programu tworzony jest pierwszy obiekt.
 
@@ -18,78 +17,69 @@ struct student *wskaznik;
     czyszczenie po ka¿dym przejsciu, po kazdym wpisanym studencie
 
 */
+
 struct student{
     int ocena;
     char nazwisko[100];
     struct student *next_adress;
 };
 
-void add_students(int ilosc, struct student *ws_listy){ // ile i do ktorej listy
-    struct student *current_student, *new_student;
-    int i=0;
-    if(!ws_listy){ //jeśli nie ma jeszcze listy
-        ws_listy=malloc(sizeof(struct student));
-        wpisz_dane_studenta(ws_listy);
-        ws_listy->next_adress=0;
-        i++; // bo juz jednego utworzylismy
-    }
-    current_student=ws_listy;
-
-    while(current_student->next_adress){              // Dopoki istnieje kolejny obiekt, przechodzimy do kolejnego obiektu, bo musimy dojsc do ostatniego elmentu
-        current_student=current_student->next_adress; // Przechodzimy do kolejnych, dopóki jest nastepny obiekt
-    }
-    // jestesmy na koncu listy, current wskazuje na ostatni obiekt
-    for(i; i<ilosc;i++){
-
-        current_student->next_adress=malloc(sizeof(struct student)); // (1) w aktualneej strokturze wpisujemy adres do kolejnego
-
-        current_student=current_student->next_adress; // (2) //current zaczyna wskazywać na nowo utworzony
-
-        if(current_student==NULL){printf("\n=========================\n      blad pamieci\n=========================\n"); return 0;}
-
-        wpisz_dane_studenta(current_student); // (3) wpisujemy dane studenta
-    }
-    wyswietl_all(ws_listy);
-    wskaznik = ws_listy;
-    printf("po pierwszym\n");
-    wyswietl_all(wskaznik);
-    // w ws_listy jest wskaźnik którego chce zapisac do zmiennej globalnej
-}
-
-void wpisz_dane_studenta(struct student *s){ // przekazujemy wskaŸnik na konkretny element
-    printf("podaj ocene: \n");
-    scanf("%d", &s->ocena); // tutaj to co wprowadzimy, jest przekazywane do obiektu s
-    printf("Podaj nazwisko: \n");
-    scanf("%s", &s->nazwisko);  // s dla charow
-    s->next_adress=0;
-}
-
-void wyswietl( struct student s){ // wypisuje konkretny obiekt strukturalny
+void wyswietl( struct student s){
     printf("Student %s ma ocene %d\n", s.nazwisko, s.ocena);
 }
 
-void wyswietl_all(struct student *lista_studentow){
-    system("cls");
-    if(!lista_studentow){
-            printf("Nie ma zadnego studenta na liscie dodaj wybierajac z menu 0\n");
-            return 0; // nie ma elementow
+void wpisz_dane_studenta(struct student *s){ //wskaźnik bo zmieniamy
+    printf("podaj ocene: \n");
+    scanf("%d", &s->ocena);
+    printf("Podaj nazwisko: \n");
+    scanf("%s", s->nazwisko);
+    s->next_adress=0;
+}
+
+void add_students(int ilosc, struct student *root){
+    struct student *ws_listy;
+    ws_listy=root; // chcemy zmieniac lokalnie
+    while(ws_listy->next_adress){  // przejscie do ostatniego elementu
+        ws_listy=ws_listy->next_adress;
     }
-    else{
-        while(lista_studentow->next_adress){
-            wyswietl(*lista_studentow);
-            lista_studentow=lista_studentow->next_adress;
-        }
+
+    for(int i=0; i<ilosc;i++){
+        ws_listy->next_adress=malloc(sizeof(struct student)); // (1) pole w struct wpisujemy adres do kolejnego
+
+        ws_listy=ws_listy->next_adress;                       // (2) //wskaznik wskazuje na nowy element
+
+        if(ws_listy==NULL){printf("\n====\n  blad pamieci\n====\n"); return;}
+
+        wpisz_dane_studenta(ws_listy);                        // (3) wpisujemy dane studenta
+    }
+}
+
+void wyswietl_all(struct student *root){
+    struct student *lista_studentow;
+    lista_studentow=root;
+    if(!(lista_studentow->next_adress)) printf("nie ma studentow\n");
+    while(lista_studentow->next_adress){
+        lista_studentow=lista_studentow->next_adress;
         wyswietl(*lista_studentow);
     }
 }
 
 int main()
 {
+    struct student *root=0;
+
+    root=malloc(sizeof(struct student));
+    root->next_adress=0;
+    root->ocena = 0;
+
+    //printf("root %d\n",root);
+
     while(1){
         int wybor, ilosc, pom;
 
-        printf("Wybierz dzialanie:\n0 - dodawanie studentow(nawet jesli nie ma jeszcze listy)\n1 - wyswietlanie wszystkich studentow\n");
-        printf("2 - znajdywanie studenta / tow, rozbudowac o wybor np wszyscy co maja dana ocene\nw tym zrobic tez dodatkowe operacje co z tymi zrobic(wyswietlic, usunac)\n %d - wyjscie\n", WYJSCIE);
+        system("cls");
+        printf("Wybierz dzialanie:\n0 - dodawanie studentow\n1 - wyswietlanie wszystkich studentow\n");
+        printf("2 - znajdywanie studenta / tow, rozbudowac o wybor np wszyscy co maja dana ocene\nw tym zrobic tez dodatkowe operacje co z tymi zrobic(wyswietlic, usunac)\n%d - wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
 
         system("cls"); // oczyszczanie konsoli
@@ -97,20 +87,18 @@ int main()
         case 0:
             printf("Podaj liczbe studentow: \n");
             scanf("%d", &ilosc);
-            system("cls");
-            add_students(ilosc, root); // wpisujemy dane studentow, tyle ile wpisano
-
-            printf("root %d\n",root);
-
-            printf("chcesz wyswietlic? 0/1 \n");
-            scanf("%d", &pom);
-            if(pom) wyswietl_all(root);
+            add_students(ilosc, root);
             break;
         case 1:
-            printf("wyswietlanie wszystkich studentow\n");
+            printf("wyswietlanie wszystkich studentow: \n");
             wyswietl_all(root);
             break;
+        case 2:
+            printf("szukasz po:\n0 - ocenie\n1 - nazwisku\n");
+            scanf("%d", &pom);
+            // tu dalej CDN
 
+            break;
         case WYJSCIE:
             free(root);
             printf("dzieki za skorzystanie z programu\n");
@@ -122,13 +110,11 @@ int main()
     //printf("%d\n", root); // wyœwietlamy aktualn¹ wartoœæ wskaŸnika na roota
     //printf("Student %s ma ocene %d\n", &root->nazwisko, &root->ocena)
     if(wybor!=WYJSCIE){
+        pom=0;
         printf("wrocic do menu? 0/1\n", &pom);
         scanf("%d", &pom);
         if(!pom) break;
-
-    }
-        system("cls");
-        free(root);
+        }
     }
     printf("dzieki za skorzystanie z programu\n");
     return 0;
