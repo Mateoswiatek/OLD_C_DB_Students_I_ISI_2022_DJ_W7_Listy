@@ -3,15 +3,15 @@
 /*
     na start programu tworzony jest pierwszy obiekt.
 
-    1.dodawanie studentów dan¹ iloœæ,
-        1. tworzenie przestrzeni obiektu na koñcu listy.
-            1.przejœcie do koñca listy (tylko raz)
-            2.zapamiêtanie wskaŸnika do ostatniego elementu
+    1.dodawanie studentÃ³w danÄ… iloÅ›Ä‡,
+        1. tworzenie przestrzeni obiektu na koÅ„cu listy.
+            1.przejÅ›cie do koÅ„ca listy (tylko raz)
+            2.zapamiÄ™tanie wskaÅºnika do ostatniego elementu
         2. wprowadzanie danych.
-        jeœl iloœæ =1 do wskaŸnika 0,
+        jeÅ›l iloÅ›Ä‡ =1 do wskaÅºnika 0,
         jesli nie,
-        zmniejsza iloœæ o 1,
-    2.wyœwietlanie wszystkich studentów
+        zmniejsza iloÅ›Ä‡ o 1,
+    2.wyÅ›wietlanie wszystkich studentÃ³w
 
 */
 struct student{ // tworzymy strukture
@@ -22,13 +22,30 @@ struct student{ // tworzymy strukture
 
 void add_students(int ilosc, struct student *ws_listy){ // ile i do ktorej listy
     struct student *current_student;
-
-    current_student->next_adress=0; // nowy obiekt ma na koñcu 0, aby by³o zakoñczenie drzewa
+    printf("aktualny: %d\n", current_student);
+    printf("ws listy powinno byc0 = %d\n", ws_listy);
+    if(!ws_listy){
+        ws_listy=malloc(sizeof(struct student));
+        ws_listy->next_adress=0; // aby zawsze na koÅ„cu byÅ‚o 0
+    }
+    printf("aktualny: %d\n", current_student);
+    printf("ws listy %d\n", ws_listy);
+    current_student=ws_listy;
+    printf("Powinny byc takie same: \n");
+    printf("aktualny: %d\n", current_student);
+    printf("ws listy %d\n", ws_listy);
+    while(current_student->next_adress){ // dopoki istnieje kolejny obiekt, przechodzimy do kolejnego obiektu, bo musimy dojsc do ostatniego elmentu
+        current_student=current_student->next_adress; // przechodzimy do kolejnych, dopÃ³ki jest nastÃªpny obiekt
+    }
+    // jestesmy na koncu listy w pÄ™tli bÄ™dzie to co niÅ¼ej
+    wpisz_dane_studenta(current_student); //wpisujemy imie i naziwsko
+    wyswietl(*current_student);
+    current_student->next_adress=0; // nowy obiekt ma na koÅ„cu 0, aby byÅ‚o zakoÅ„czeniew drzewa
 }
 
-void wpisz_dane_studenta(struct student *s){ // przekazujemy wskaŸnik na konkretny element
+void wpisz_dane_studenta(struct student *s){ // przekazujemy wskaÅºnik na konkretny element
     printf("podaj ocene: \n");
-    scanf("%d", &s->ocena); // tutaj to co wprowadzimy, jest przekazywane do obiektu s1
+    scanf("%d", &s->ocena); // tutaj to co wprowadzimy, jest przekazywane do obiektu s
     printf("Podaj nazwisko: \n");
     scanf("%s", &s->nazwisko);  // s dla charow
 }
@@ -37,17 +54,17 @@ void wyswietl( struct student s){ // wypisuje konkretny obiekt strukturalny
     printf("Student %s ma ocene %d\n", s.nazwisko, s.ocena);
 }
 
+
 int main()
 {
-    struct student *root;
-    root=malloc(sizeof(struct student));
-    root->next_adress=0; // aby zawsze na koñcu by³o 0
+    struct student *root; //pierwszy element
+    root=0;
 
-    wpisz_dane_studenta(root);
+    //tu bÄ™dzie while(1) a w nim case (menu co chce zrobiÄ‡)
+    add_students(1, root); // wpisujemy dane pierwszego studenta
 
-    //printf("%d\n", root); // wyœwietlamy aktualn¹ wartoœæ wskaŸnika na roota
-    printf("Student %s ma ocene %d\n", &root->nazwisko, &root->ocena);
-    //add_students(5, root);
+    //printf("%d\n", root); // wyÅ›wietlamy aktualnÄ… wartoÅ›Ä‡ wskaÅºnika na roota
+    //printf("Student %s ma ocene %d\n", &root->nazwisko, &root->ocena)
 
     //wyswietl(*root);
 
