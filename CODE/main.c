@@ -11,6 +11,8 @@
 
     2.wyœwietlanie wszystkich studentów
 
+    czyszczenie po ka¿dym przejsciu, po kazdym wpisanym studencie
+
 */
 struct student{
     int ocena;
@@ -25,55 +27,24 @@ void add_students(int ilosc, struct student *ws_listy){ // ile i do ktorej listy
         ws_listy=malloc(sizeof(struct student));
         wpisz_dane_studenta(ws_listy);
         ws_listy->next_adress=0;
-        printf("zerowy\n");
-        wyswietl(ws_listy);
-        printf("inne\n\n");
         i++; // bo juz jednego utworzylismy
     }
     current_student=ws_listy;
 
-    while(current_student->next_adress){              // dopoki istnieje kolejny obiekt, przechodzimy do kolejnego obiektu, bo musimy dojsc do ostatniego elmentu
-        current_student=current_student->next_adress; // przechodzimy do kolejnych, dopóki jest nastepny obiekt
+    while(current_student->next_adress){              // Dopoki istnieje kolejny obiekt, przechodzimy do kolejnego obiektu, bo musimy dojsc do ostatniego elmentu
+        current_student=current_student->next_adress; // Przechodzimy do kolejnych, dopóki jest nastepny obiekt
     }
     // jestesmy na koncu listy, current wskazuje na ostatni obiekt
-    for(i; i<ilosc;i++){ //jpg paint
+    for(i; i<ilosc;i++){
 
-        //current_student->next_adress=malloc(sizeof(struct student)); // (1) w aktualneej strokturze wpisujemy adres do kolejnego
+        current_student->next_adress=malloc(sizeof(struct student)); // (1) w aktualneej strokturze wpisujemy adres do kolejnego
 
-        printf("poprzedni:\n"); // do testow
-        wyswietl(current_student);
+        current_student=current_student->next_adress; // (2) //current zaczyna wskazywaæ na nowo utworzony
 
-        current_student=current_student->next_adress; // (2)
-
-        printf("current: %d\n", current_student);
         if(current_student==NULL){printf("\n=========================\n      blad pamieci\n=========================\n"); return 0;}
 
-        printf("randomowe\n");
-        wyswietl(current_student);
-
         wpisz_dane_studenta(current_student); // (3) wpisujemy dane studenta
-
-        printf("aktualnie wpisany\n");
-        wyswietl(current_student);
     }
-
-    /*
-    for(i; i<ilosc;i++){
-        new_student=malloc(sizeof(struct student));
-        current_student->next_adress=new_student; // w aktualneej strokturze wpisujemy adres do kolejnego
-        wpisz_dane_studenta(new_student); // wpisujemy dane studenta
-        printf("poprzedni\n"); // do testow
-        wyswietl(current_student);
-        printf("aktualnie wpisany\n");
-        wyswietl(*new_student);
-        current_student=new_student; // zaczynamy wskazywac na nowo utworzonego, w petli
-    }*/
-
-
-
-
-
-    current_student->next_adress=0; // ostatni obiekt ma na koñcu 0, aby by³o zakoñczeniew drzewa
 }
 
 void wpisz_dane_studenta(struct student *s){ // przekazujemy wskaŸnik na konkretny element
@@ -88,12 +59,22 @@ void wyswietl( struct student s){ // wypisuje konkretny obiekt strukturalny
     printf("Student %s ma ocene %d, nastepny wskaznik to %d\n", s.nazwisko, s.ocena, s.next_adress);
 }
 
+
+
+
+
+
+
+
+
+
 void wyswietl_all(struct student *lista_studentow){
     if(!lista_studentow){
             printf("Nie ma zadnego studenta na liscie dodaj wpisujac 1");
             return 0; // nie ma elementow
     }
 }
+
 int main()
 {
     struct student *root; //pierwszy element
@@ -102,7 +83,7 @@ int main()
     //tu bêdzie while(1) a w nim case (menu co chce zrobiæ)
     //while(1){
         int wybor;
-        printf("Wybierz dzialanie:\n0 - dodawanie studentow\n1 - wyswietlanie studentow\n2 - znajdywanie studenta / tow, rozbudowac o wybor np wszyscy co maja dana ocene\nw tym zrobic tez dodatkowe operacje co z tymi zrobic(wyswietlic, usunac) 3 - wyjscie\n");
+        printf("Wybierz dzialanie:\n0 - dodawanie studentow(nawet jesli nie ma jeszcze listy)\n1 - wyswietlanie wszystkich studentow\n2 - znajdywanie studenta / tow, rozbudowac o wybor np wszyscy co maja dana ocene\nw tym zrobic tez dodatkowe operacje co z tymi zrobic(wyswietlic, usunac) 3 - wyjscie\n");
         scanf("%d", &wybor);
 
     add_students(3, root); // wpisujemy dane pierwszego studenta
